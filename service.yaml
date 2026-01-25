@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: hello
+  name: my-pod
+spec:
+  containers:
+  - image: nginx:latest
+    name: my-pod
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: hello
+  name: my-pod2
+spec:
+  containers:
+  - image: nginx:latest
+    name: my-pod2
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: my-pod
+  name: my-pod
+spec:
+  ports:
+  - port: 8000
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: hello
+  type: NodePort
+status:
+  loadBalancer: {}

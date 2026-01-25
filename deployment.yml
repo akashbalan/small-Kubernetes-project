@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deppod1
+  name: deppod1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: deppod1
+  template:
+    metadata:
+      labels:
+        app: deppod1
+    spec:
+      containers:
+      - image: nginx:1.14
+        name: server
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: my-pod
+  name: my-pod
+spec:
+  ports:
+  - port: 8000
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: deppod1
+  type: NodePort
+status:
+  loadBalancer: {}

@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deppod1
+  labels:
+    app: deppod1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: deppod1
+  template:
+    metadata:
+      labels:
+        app: deppod1
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+        - name: mysqldb
+          image: kiran2361993/mydb:v1
+          ports:
+            - containerPort: 3306
+          env:
+            - name: DB_NAME
+              value: "mysqldb"
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_URL
+              value: "weewewe"
+
+---
+
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: deppod1-service
+  labels:
+    app: deppod1
+spec:
+  type: NodePort
+  selector:
+    app: deppod1   # matches the pods created by the Deployment
+  ports:
+    - name: http-nginx
+      port: 8000        # service port for nginx
+      targetPort: 80    # container port inside pod
+      nodePort: 32080   # external node port (optional, else auto-assign)
+    - name: mysql-db
+      port: 3306        # service port for mysqldb
+      targetPort: 3306  # container port inside pod
+      nodePort: 32306   # external node port (optional, else auto-assign)
+
+
+
